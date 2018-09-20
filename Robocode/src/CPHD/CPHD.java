@@ -6,6 +6,7 @@ import robocode.AdvancedRobot;
 import robocode.HitWallEvent;
 import robocode.ScannedRobotEvent;
 import robocode.util.Utils;
+import java.util.Random;
 
 import java.awt.*;
 
@@ -34,9 +35,13 @@ public class CPHD extends AdvancedRobot {
     public void run() {
         while (true) {
             //ahead(100);
+            setBodyColor(Color.blue);
+            setGunColor(Color.red);
+            setRadarColor(Color.white);
 
             setAdjustGunForRobotTurn(true); // Keep the gun still when we turn
             turnRadarRightRadians(Double.POSITIVE_INFINITY);//keep turning radar right
+
 
         }
     }
@@ -53,18 +58,25 @@ public class CPHD extends AdvancedRobot {
         if(Math.random()>.9){
             setMaxVelocity((12*Math.random())+12);//randomly change speed
         }
-        if (e.getDistance() > 150) {//if distance is greater than 150
-            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing- getGunHeadingRadians()+latVel/22);//amount to turn our gun, lead just a little bit
+        if (e.getDistance() > 250) {//if distance is greater than 150
+            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing- getGunHeadingRadians()+latVel/18);//amount to turn our gun, lead just a little bit
             setTurnGunRightRadians(gunTurnAmt); //turn our gun
-            setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(absBearing-getHeadingRadians()+latVel/getVelocity()));//drive towards the enemies predicted future location
+
+            if (Math.random() * 2 > 1){
+                setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(absBearing-getHeadingRadians()+latVel/getVelocity()) + 20);//drive towards the enemies predicted future location
+            }
+            else
+            {
+                setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(absBearing-getHeadingRadians()+latVel/getVelocity()) - 20);//drive towards the enemies predicted future location
+            }
             setAhead((e.getDistance() - 140)*moveDirection);//move forward
-            setFire(3);//fire
+            setFire(1);//fire
         }
         else {//if we are close enough...
-            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 15);//amount to turn our gun, lead just a little bit
+            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 10);//amount to turn our gun, lead just a little bit
             setTurnGunRightRadians(gunTurnAmt);//turn our gun
             setTurnLeft(-90 - e.getBearing()); //turn perpendicular to the enemy
-            setAhead((e.getDistance() - 140) * moveDirection);//move forward
+            setAhead((e.getDistance() - 200) * moveDirection);//move forward
             setFire(3);//fire
         }
     }
@@ -90,7 +102,7 @@ public class CPHD extends AdvancedRobot {
         g.drawOval((int) (getX() - 59), (int) (getY() - 59), 118, 118);
         g.drawOval((int) (getX() - 60), (int) (getY() - 60), 120, 120);
 
-        turnLeft(90 - e.getBearing());
+
     }
 
     public void onHitWall(HitWallEvent e) {
