@@ -70,7 +70,7 @@ public class CPHD extends AdvancedRobot {
                 setTurnRightRadians(robocode.util.Utils.normalRelativeAngle(absBearing-getHeadingRadians()+latVel/getVelocity()) - 20);//drive towards the enemies predicted future location
             }
             setAhead((e.getDistance() - 140)*moveDirection);//move forward
-            setFire(1);//fire
+            setFire(2);//fire
         }
         else {//if we are close enough...
             gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 10);//amount to turn our gun, lead just a little bit
