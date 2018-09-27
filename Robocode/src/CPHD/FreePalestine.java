@@ -41,6 +41,11 @@ public class FreePalestine extends AdvancedRobot {
         setAdjustGunForRobotTurn(true);
         setAdjustRadarForGunTurn(true);
 
+        setBodyColor(Color.green);
+        setGunColor(Color.white);
+        setRadarColor(Color.black);
+        setBulletColor(Color.red);
+
         do {
             // basic mini-radar code
             turnRadarRightRadians(Double.POSITIVE_INFINITY);
@@ -53,7 +58,7 @@ public class FreePalestine extends AdvancedRobot {
         double lateralVelocity = getVelocity()*Math.sin(e.getBearingRadians());
         double absBearing = e.getBearingRadians() + getHeadingRadians();
 
-        setTurnRadarRightRadians(Utils.normalRelativeAngle(absBearing - getRadarHeadingRadians()) * 2);
+        //setTurnRadarRightRadians(Utils.normalRelativeAngle(absBearing - getRadarHeadingRadians()) * 2);
 
         _surfDirections.add(0,
                 new Integer((lateralVelocity >= 0) ? 1 : -1));
@@ -84,6 +89,39 @@ public class FreePalestine extends AdvancedRobot {
         doSurfing();
 
         // gun code would go here...
+
+        int moveDirection = 1;
+        double latVel=e.getVelocity() * Math.sin(e.getHeadingRadians() -absBearing);//enemies later velocity
+        double gunTurnAmt;//amount to turn our gun
+        setTurnRadarLeftRadians(getRadarTurnRemainingRadians());//lock on the radar
+        if(Math.random()>.9){
+            setMaxVelocity((12*Math.random())+12);//randomly change speed
+        }
+        if (e.getDistance() > 250) {//if distance is greater than 250
+            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing- getGunHeadingRadians()+latVel/18);//amount to turn our gun, lead just a little bit
+            setTurnGunRightRadians(gunTurnAmt); //turn our gun
+
+            double startAngle = 0;
+
+            /*if (Math.random() * 2 > 1){
+               // setAhead(robocode.util.Utils.normalRelativeAngle(absBearing-getHeadingRadians()+latVel/getVelocity()) + 40);//drive towards the enemies predicted future location
+            }
+            else
+            {
+               // setAhead(robocode.util.Utils.normalRelativeAngle(absBearing-getHeadingRadians()+latVel/getVelocity()) - 40);//drive towards the enemies predicted future location
+            }*/
+
+
+           // setAhead((e.getDistance() - 140)*moveDirection);//move forward
+            setFire(1);//fire
+        }
+        else {//if we are close enough...
+            gunTurnAmt = robocode.util.Utils.normalRelativeAngle(absBearing - getGunHeadingRadians() + latVel / 10);//amount to turn our gun, lead just a little bit
+            setTurnGunRightRadians(gunTurnAmt);//turn our gun
+            //setTurnLeft(-90 - e.getBearing()); //turn perpendicular to the enemy
+           // setAhead((e.getDistance() - 200) * moveDirection);//move forward
+            setFire(3);//fire
+        }
     }
 
     public void updateWaves() {
